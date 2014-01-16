@@ -11,4 +11,4 @@ wsgiref==0.1.2
 djangorestframework
 markdown
 django-filter
-django-south
+South
