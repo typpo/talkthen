@@ -13,3 +13,4 @@ markdown
 django-filter
 South
 gunicorn
+django-celery
