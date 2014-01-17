@@ -7,6 +7,7 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'talkthen.views.home', name='home'),
     url(r'^api/', include('api.urls')),
+    url(r'^core/', include('core.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
 
