@@ -1,7 +1,36 @@
+import datetime
+
 from django.shortcuts import render, get_object_or_404
 
 import twilio.twiml
-from talkthen.core.models import Call
+from talkthen.core.models import Call, PhoneNumber
+
+def create(request, from_num, to_num):
+  # TODO universal formatting for number
+  # TODO ensure nothing outside of the US
+
+  # Create a call from
+  try:
+    from_phone = Phone.objects.get(number=from_num)
+  except:
+    from_phone = Phone(number=from_num)
+    from_phone.save()
+
+  try:
+    to_phone = Phone.objects.get(number=to_num)
+  except:
+    to_phone = Phone(number=to_num)
+    to_phone.save()
+
+  newcall = Call(owner_number=from_phone)
+  newcall.participant_numbers.add(to_phone)
+  newcall.description = 'placeholder desc'
+  newcall.scheduled_for = datetime.datetime.now()
+
+  newcall.save()
+
+  return ''
+
 
 def call_placed(request, call_pk):
   # This handler is called when a conference is initially connected to the
