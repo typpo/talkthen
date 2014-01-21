@@ -7,6 +7,6 @@ def start_call(number, call_pk):
 
   call = client.calls.create(to=number,
       from=TWILIO_CALLER_ID,
-      url='/core/call_placed/%s/' % call_pk)
+      url='http://www.ianww.com/talkthen/core/call_placed/%s/' % call_pk)
 
   return call.sid
