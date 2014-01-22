@@ -8,7 +8,7 @@ from talkthen.core.models import Call, PhoneNumber
 def create(request, from_num, to_num):
   # TODO ensure nothing outside of the US
 
-  # ensure universal number formatting
+  # Convert to standard number format
   from_num = PhoneNumber.convert_to_e164(from_num)
   to_num = PhoneNumber.convert_to_e164(to_num)
 

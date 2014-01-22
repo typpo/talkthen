@@ -29,6 +29,8 @@ class Call(models.Model):
   scheduled_for = models.DateTimeField()
 
   called = models.BooleanField(default=False)
+  canceled = models.BooleanField(default=False)
+  confirmed = models.BooleanField(default=False)
 
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
