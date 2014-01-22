@@ -1,7 +1,7 @@
 talkthen
 ========
 
-# Setup
+## Setup
 
   1. Install virtualenv
   
@@ -25,3 +25,11 @@ talkthen
   `./manage.py runserver 0.0.0.0:3333`
   
   In your browser: http://localhost:3333
+
+## Organization
+
+`api/` - uses django rest framework to provide an API for PhoneNumbers and Calls.  In the beginning I wanted to do everything through this.  This is not strictly necessary and I've been violating the RESTiness of everything by putting logic in `core/views.py`.
+
+`core/` - all the telephony stuff.  See `views.py` and `conference.py`
+
+`web/` - the web view (just one page now)
