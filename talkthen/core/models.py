@@ -31,6 +31,7 @@ class Call(models.Model):
   called = models.BooleanField(default=False)
   canceled = models.BooleanField(default=False)
   confirmed = models.BooleanField(default=False)
+  confirmation_code = models.CharField(max_length=10)
 
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
