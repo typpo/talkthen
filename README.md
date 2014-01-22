@@ -13,7 +13,7 @@ talkthen
   
   3. Activate it (this must be done whenever you want to run the app):
   
-  source venv/bin/activate
+  `source venv/bin/activate`
   
   4. Install project dependencies
   
