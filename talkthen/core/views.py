@@ -1,6 +1,9 @@
 import datetime
 
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 import twilio.twiml
 from core.models import Call, PhoneNumber
@@ -35,6 +38,8 @@ def create(request, from_num, to_num):
   return ''
 
 
+@require_http_methods(['GET', 'POST'])
+@csrf_exempt
 def call_placed(request, call_pk):
   # This handler is called when a conference is initially connected to the
   # organizer.  It determines who this person should be connected with, and
@@ -45,6 +50,7 @@ def call_placed(request, call_pk):
 
   resp = twilio.twiml.Response()
   call = get_object_or_404(Call, pk=call_pk)
-  resp.dial(call.participant_numbers[0].number)   # only support 2-person calls for now
+  resp.say('Hello. You are being connected.')
+  resp.dial(call.participant_numbers.all()[0].number)   # only support 2-person calls for now
 
-  return str(resp)
+  return HttpResponse(str(resp))

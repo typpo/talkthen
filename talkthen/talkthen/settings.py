@@ -115,6 +115,7 @@ REST_FRAMEWORK = {
 from twilio_auth import SID as TWILIO_ACCOUNT_SID
 from twilio_auth import TOKEN as TWILIO_AUTH_TOKEN
 from twilio_auth import CALLER_ID as TWILIO_DEFAULT_CALLERID
+TWILIO_CALLER_ID = TWILIO_DEFAULT_CALLERID
 
 # Celery stuff
 import djcelery
