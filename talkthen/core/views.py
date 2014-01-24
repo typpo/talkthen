@@ -3,7 +3,7 @@ import datetime
 from django.shortcuts import render, get_object_or_404
 
 import twilio.twiml
-from talkthen.core.models import Call, PhoneNumber
+from core.models import Call, PhoneNumber
 
 def create(request, from_num, to_num):
   # TODO ensure nothing outside of the US

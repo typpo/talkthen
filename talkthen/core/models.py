@@ -6,7 +6,7 @@ class PhoneNumber(models.Model):
   name = models.CharField(max_length=50, blank=True)
   email = models.EmailField(max_length=128, blank=True)
 
-  def convert_to_e164(raw_phone):
+  def convert_to_e164(self, raw_phone):
     if not raw_phone:
       return
 
@@ -20,6 +20,13 @@ class PhoneNumber(models.Model):
     phone_representation = phonenumbers.parse(raw_phone, parse_type)
     return phonenumbers.format_number(phone_representation,
       phonenumbers.PhoneNumberFormat.E164)
+
+  def save(self, *args, **kwargs):
+    self.number = self.convert_to_e164(self.number)
+    super(PhoneNumber, self).save(*args, **kwargs) # Call the "real" save() method.
+
+  def __str__(self):
+    return '%s (%s)' % (self.number, self.name)
 
 class Call(models.Model):
   owner_number = models.ForeignKey(PhoneNumber)
@@ -35,3 +42,6 @@ class Call(models.Model):
 
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
+
+  def __str__(self):
+    return 'Call scheduled by %s' % (self.owner_number)
