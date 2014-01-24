@@ -1,4 +1,5 @@
 import datetime
+import time
 
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -51,6 +52,17 @@ def call_placed(request, call_pk):
   resp = twilio.twiml.Response()
   call = get_object_or_404(Call, pk=call_pk)
   resp.say('Hello. You are being connected.')
-  resp.dial(call.participant_numbers.all()[0].number)   # only support 2-person calls for now
+  t_start = time.time()
+  # Only supporting 2-person calls for now
+  # TODO Time limit would go here
+  # TODO pass action to handle call status
+  # TODO conference stuff https://www.twilio.com/docs/api/twiml/conference
+  resp.dial(call.participant_numbers.all()[0].number,
+      callerId=call.owner_number.number)
+  if time.time() - t_start < 33:
+    # Less than a minute
+    resp.say('Sorry, your other caller did not pick up.  This call is ending.')
+  else:
+    resp.say('The call has ended.  You may hang up now.')
 
   return HttpResponse(str(resp))
