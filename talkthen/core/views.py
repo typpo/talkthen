@@ -12,10 +12,16 @@ from core.models import Call, PhoneNumber
 
 import conference
 
-def create(request, from_num, to_num):
-
-  resp = conference.schedule_call(from_num, to_num)
-  return HttpResponse(json.dumps(resp))
+@require_http_methods(['POST'])
+@csrf_exempt     # TODO should not be
+def create_call(request):
+  from_num = request.POST['from']
+  to_num = request.POST['to']
+  print 'scheduling call %s to %s' % (from_num, to_num)
+  if from_num and to_num:
+    resp = conference.schedule_call(from_num, to_num)
+    return HttpResponse(json.dumps(resp))
+  return {'success': False, 'message': 'Invalid request'}
 
 
 @require_http_methods(['GET', 'POST'])
@@ -51,8 +57,9 @@ def sms_received(request):
   print 'Got MSG from %s: %s' % (from_number, msg)
 
   # TODO
+
   resp = twilio.twiml.Response()
-  resp.message(message)
+  resp.message('Your call is confirmed.')
 
   return HttpResponse(str(resp))
 

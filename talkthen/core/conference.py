@@ -1,8 +1,12 @@
+import datetime
 import random
 import string
+
 import twilio.twiml
 from twilio.rest import TwilioRestClient
 from talkthen.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_CALLER_ID
+
+from core.models import Call, PhoneNumber
 
 def start_call(number, call_pk):
   client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -13,16 +17,18 @@ def start_call(number, call_pk):
   return call.sid
 
 def schedule_call(from_num, to_num):
+  from_num = PhoneNumber.convert_to_e164(from_num)
+  to_num = PhoneNumber.convert_to_e164(to_num)
   try:
-    from_phone = Phone.objects.get(number=from_num)
-  except:
-    from_phone = Phone(number=from_num)
+    from_phone = PhoneNumber.objects.get(number=from_num)
+  except PhoneNumber.DoesNotExist:
+    from_phone = PhoneNumber(number=from_num)
     from_phone.save()
 
   try:
-    to_phone = Phone.objects.get(number=to_num)
-  except:
-    to_phone = Phone(number=to_num)
+    to_phone = PhoneNumber.objects.get(number=to_num)
+  except PhoneNumber.DoesNotExist:
+    to_phone = PhoneNumber(number=to_num)
     to_phone.save()
 
   # Ensure nothing outside US
@@ -32,17 +38,21 @@ def schedule_call(from_num, to_num):
             'message': 'We do not currently support numbers outside the US',
             }
 
-  newcall = Call(owner_number=from_phone)
-  newcall.participant_numbers.add(to_phone)
+  newcall = Call()
+  newcall.owner_number = from_phone
   newcall.description = 'placeholder desc'
   newcall.scheduled_for = datetime.datetime.now()
+  newcall.remind_at = datetime.datetime.now()
   newcall.confirmation_code = generate_confirmation_code()
 
+  newcall.save()
+  newcall.participant_numbers.add(to_phone)
   newcall.save()
 
   # Send confirmation text
   client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-  confirm_msg = 'Confirm your call with %s by responding with: %s' % \
+  # TODO change to numbers
+  confirm_msg = 'Confirm your call with %s by responding with: %s (not case sensitive)' % \
           (from_phone.number, newcall.confirmation_code)
   client.messages.create(to=to_phone.number, from_=TWILIO_CALLER_ID,
           body=confirm_msg)

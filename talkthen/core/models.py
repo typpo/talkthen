@@ -6,7 +6,8 @@ class PhoneNumber(models.Model):
   name = models.CharField(max_length=50, blank=True)
   email = models.EmailField(max_length=128, blank=True)
 
-  def convert_to_e164(self, raw_phone):
+  @staticmethod
+  def convert_to_e164(raw_phone):
     if not raw_phone:
       return
 
@@ -22,7 +23,7 @@ class PhoneNumber(models.Model):
       phonenumbers.PhoneNumberFormat.E164)
 
   def save(self, *args, **kwargs):
-    self.number = self.convert_to_e164(self.number)
+    self.number = PhoneNumber.convert_to_e164(self.number)
     super(PhoneNumber, self).save(*args, **kwargs) # Call the "real" save() method.
 
   def __str__(self):
@@ -30,10 +31,11 @@ class PhoneNumber(models.Model):
 
 class Call(models.Model):
   owner_number = models.ForeignKey(PhoneNumber)
-  participant_numbers = models.ManyToManyField(PhoneNumber, related_name='call_participants')
+  participant_numbers = models.ManyToManyField(PhoneNumber, related_name='call_participant_numbers')
 
   description = models.CharField(max_length=300, blank=True)
   scheduled_for = models.DateTimeField()
+  remind_at = models.DateTimeField()
 
   called = models.BooleanField(default=False)
   canceled = models.BooleanField(default=False)

@@ -64,17 +64,17 @@
             <form role="form">
               <div class="form-group col-lg-4">
                 <!--<label for="exampleInputEmail1">Your phone number</label>-->
-                <input type="text" class="form-control input-lg" id="exampleInputEmail1" placeholder="Your phone number">
+                <input type="text" class="form-control input-lg" id="phone1" placeholder="Your phone number">
               </div>
               <div class="form-group col-lg-4">
-                <input type="text" class="form-control input-lg" id="exampleInputEmail1" placeholder="Other person's number">
+                <input type="text" class="form-control input-lg" id="phone2" placeholder="Other person's number">
               </div>
               <div class="form-group col-lg-4">
                 <input type="text" class="form-control input-lg" id="when" placeholder="When is your call?">
                 <span id="when_hint" style="color:orange;display:none;">&rarr; examples: "9am next fri," "4pm 3/15"</span>
                 <span id="when_error" style="color:red;display:none;">not valid</span>
               </div>
-              <button type="submit" class="btn btn-default btn-warning btn-lg" style="margin-top:10px">Schedule it</button>
+              <button type="button" id="btn_schedule" class="btn btn-default btn-warning btn-lg" style="margin-top:10px">Schedule it</button>
               <div class="hidden-xs hidden-sm hidden-md" style="position:absolute;top:75px;right:115px;">
               <img class="hidden-xs hidden-sm hidden-md" src="assets/img/arrow2.png">
               <p><em>No more missed or late calls!</em></p>
@@ -286,6 +286,7 @@
       interval: 3500
     })
  */
+ $(function() {
 
     $('#when').on('focus', function() {
       $('#when_hint').show();
@@ -300,6 +301,32 @@
       }
       $('#when_hint').show().html(text);
     });
+
+    $('#btn_schedule').on('click', function() {
+      var p1 = $('#phone1').val().trim();
+      var p2 = $('#phone2').val().trim();
+      var when = Date.create($('#when').val());
+      if (!when.isValid()) {
+        alert('Invalid date');
+        return false;
+      }
+      if (p1 == '' || p2 == '') {
+        alert('You are missing inputs');
+        return false;
+      }
+
+      $.post('/core/create_call/', {
+        from: p1,
+        to: p2,
+        when: +when
+      }, function(data) {
+        console.log(data);
+        alert('Scheduled');
+      });
+      return false;
+    });
+
+  });
 
     </script>
 
