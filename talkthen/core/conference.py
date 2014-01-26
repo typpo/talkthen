@@ -44,7 +44,7 @@ def schedule_call(from_num, to_num):
   client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
   confirm_msg = 'Confirm your call with %s by responding with: %s' % \
           (from_phone.number, newcall.confirmation_code)
-  client.message.create(to=to_phone.number, from_=TWILIO_CALLER_ID,
+  client.messages.create(to=to_phone.number, from_=TWILIO_CALLER_ID,
           body=confirm_msg)
 
   return {

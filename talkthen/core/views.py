@@ -44,7 +44,7 @@ def call_placed(request, call_pk):
 
 @require_http_methods(['GET', 'POST'])
 @csrf_exempt
-def text_confirmation_reply(request):
+def sms_received(request):
   from_number = request.REQUEST.get('From', None)
   msg = request.REQUEST.get('Body', None)
 
