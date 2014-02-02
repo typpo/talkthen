@@ -54,7 +54,7 @@ def schedule_call(from_num, to_num):
   # TODO change to numbers
   confirm_msg = 'Confirm your call with %s by responding with: %s (not case sensitive)' % \
           (from_phone.number, newcall.confirmation_code)
-  client.messages.create(to=to_phone.number, from_=TWILIO_CALLER_ID,
+  client.messages.create(to=from_phone.number, from_=TWILIO_CALLER_ID,
           body=confirm_msg)
 
   return {
