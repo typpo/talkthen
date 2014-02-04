@@ -57,15 +57,28 @@ def sms_received(request):
   # TODO handle cancellation
   print 'Got MSG from %s: %s' % (from_number, msg)
 
+  parts = msg.split(' ')
+  if len(parts) > 1 and parts[0].lower() == 'cancel':
+    code = parts[1]
+    cancel = True
+  else:
+    code = msg
+    cancel = False
+
   resp = twilio.twiml.Response()
   try:
-    call = Call.objects.get(owner_number__number=from_number, confirmation_code=msg)
+    call = Call.objects.get(owner_number__number=from_number, confirmation_code=code)
   except:
     resp.message('Sorry, could not confirm your call. (1)')
     return HttpResponse(str(resp))
 
-  call.confirmed = True
-  resp.message('Your call is confirmed.')
+  if cancel:
+    call.delete()
+    resp.message('Your call has been cancelled.')
+  else:
+    call.confirmed = True
+    call.save()
+    resp.message('Your call is confirmed.')
   return HttpResponse(str(resp))
 
 
