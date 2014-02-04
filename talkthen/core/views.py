@@ -78,7 +78,7 @@ def sms_received(request):
   else:
     call.confirmed = True
     call.save()
-    resp.message('Your call is confirmed.')
+    resp.message('Your call is confirmed. Text "cancel %s" to cancel.' % code)
   return HttpResponse(str(resp))
 
 
