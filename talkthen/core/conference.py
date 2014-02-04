@@ -62,7 +62,7 @@ def schedule_call(from_num, to_num):
           }
 
 def generate_confirmation_code():
-  return random_char(5).lower()
+  return random_code(5).lower()
 
-def random_char(y):
-  return ''.join(random.choice(string.ascii_letters) for x in range(y))
+def random_code(y):
+  return ''.join(str(random.randint(0, 9)) for x in range(y))

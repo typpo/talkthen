@@ -51,16 +51,21 @@ def call_placed(request, call_pk):
 @require_http_methods(['GET', 'POST'])
 @csrf_exempt
 def sms_received(request):
-  from_number = request.REQUEST.get('From', None)
-  msg = request.REQUEST.get('Body', None)
+  from_number = PhoneNumber.convert_to_e164(request.REQUEST.get('From', None))
+  msg = request.REQUEST.get('Body', None).strip()
 
+  # TODO handle cancellation
   print 'Got MSG from %s: %s' % (from_number, msg)
 
-  # TODO
-
   resp = twilio.twiml.Response()
-  resp.message('Your call is confirmed.')
+  try:
+    call = Call.objects.get(owner_number__number=from_number, confirmation_code=msg)
+  except:
+    resp.message('Sorry, could not confirm your call. (1)')
+    return HttpResponse(str(resp))
 
+  call.confirmed = True
+  resp.message('Your call is confirmed.')
   return HttpResponse(str(resp))
 
 
