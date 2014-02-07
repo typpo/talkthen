@@ -290,7 +290,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary">Confirm</button>
+        <button id="btn_confirm_schedule" type="button" class="btn btn-primary">Confirm</button>
       </div>
     </div>
   </div>
@@ -328,7 +328,14 @@
       $('#when_hint').show().html(text);
     });
 
-    $('#btn_schedule_DISABLED').on('click', function() {
+    $('#btn_schedule').on('click', function() {
+      setTimeout(function() {
+        $('#email').focus();
+      }, 500);
+    });
+
+    $('#btn_confirm_schedule').on('click', function() {
+      var email = $('#email').val().trim();
       var p1 = $('#phone1').val().trim();
       var p2 = $('#phone2').val().trim();
       var when = Date.create($('#when').val());
@@ -344,7 +351,8 @@
       $.post('/core/create_call/', {
         from: p1,
         to: p2,
-        when: +when
+        when: +when,
+        email: email
       }, function(data) {
         console.log(data);
         alert('Scheduled');
