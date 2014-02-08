@@ -16,13 +16,18 @@ def start_call(number, call_pk):
 
   return call.sid
 
-def schedule_call(from_num, to_num):
+def schedule_call(from_num, to_num, email):
   from_num = PhoneNumber.convert_to_e164(from_num)
   to_num = PhoneNumber.convert_to_e164(to_num)
   try:
     from_phone = PhoneNumber.objects.get(number=from_num)
+    if email:
+      from_phone.email = email
+      from_phone.save()
   except PhoneNumber.DoesNotExist:
     from_phone = PhoneNumber(number=from_num)
+    if email:
+      from_phone.email = email
     from_phone.save()
 
   try:
@@ -52,7 +57,7 @@ def schedule_call(from_num, to_num):
   # Send confirmation text
   client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
   # TODO change to numbers
-  confirm_msg = 'Confirm your call with %s by responding with: %s (not case sensitive)' % \
+  confirm_msg = 'Confirm your call with %s by responding with: %s' % \
           (from_phone.number, newcall.confirmation_code)
   client.messages.create(to=from_phone.number, from_=TWILIO_CALLER_ID,
           body=confirm_msg)
