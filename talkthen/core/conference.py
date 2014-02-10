@@ -16,6 +16,14 @@ def start_call(number, call_pk):
 
   return call.sid
 
+def remind_call(number, call_pk):
+  client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+  reminder_msg = 'Your call with %s is happening in about 15 minutes.' % \
+          (from_phone.number)
+  client.messages.create(to=from_phone.number, from_=TWILIO_CALLER_ID,
+          body=reminder_msg)
+
 def schedule_call(from_num, to_num, email):
   from_num = PhoneNumber.convert_to_e164(from_num)
   to_num = PhoneNumber.convert_to_e164(to_num)

@@ -42,10 +42,13 @@ def call_placed(request, call_pk):
   # TODO Time limit would go here
   # TODO pass action to handle call status
   # TODO conference stuff https://www.twilio.com/docs/api/twiml/conference
-  # TODO record call length
   resp.dial(call.participant_numbers.all()[0].number,
       callerId=call.owner_number.number)
   resp.say('The call has ended.  You may hang up now.')
+
+  # Mark call as done!
+  call.called = True
+  call.save()
 
   return HttpResponse(str(resp))
 
