@@ -17,12 +17,15 @@ import conference
 def create_call(request):
   from_num = request.POST['from']
   to_num = request.POST['to']
+  # Convert from UNIX timestamp in milliseconds to timestamp in seconds
+  when = datetime.datetime.fromtimestamp(int(request.POST['when'])/1000)
   email = request.POST.get('email', None)
-  print 'scheduling call %s to %s w/ email %s' % (from_num, to_num, email)
+  print 'scheduling call %s to %s @ %s w/ email %s' % \
+      (from_num, to_num, when.strftime('%Y-%m-%d %H:%M:%S'), email)
   if from_num and to_num:
-    resp = conference.schedule_call(from_num, to_num, email)
+    resp = conference.schedule_call(from_num, to_num, when, email)
     return HttpResponse(json.dumps(resp))
-  return {'success': False, 'message': 'Invalid request'}
+  return HttpResponse("{'success': False, 'message': 'Invalid request'}")
 
 
 @require_http_methods(['GET', 'POST'])

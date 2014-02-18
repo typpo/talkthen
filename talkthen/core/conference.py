@@ -24,7 +24,7 @@ def remind_call(number, call_pk):
   client.messages.create(to=from_phone.number, from_=TWILIO_CALLER_ID,
           body=reminder_msg)
 
-def schedule_call(from_num, to_num, email):
+def schedule_call(from_num, to_num, when, email):
   from_num = PhoneNumber.convert_to_e164(from_num)
   to_num = PhoneNumber.convert_to_e164(to_num)
   try:
@@ -55,7 +55,7 @@ def schedule_call(from_num, to_num, email):
   newcall.owner_number = from_phone
   newcall.description = 'placeholder desc'
   newcall.scheduled_for = datetime.datetime.now()
-  newcall.remind_at = datetime.datetime.now()
+  newcall.remind_at = newcall.scheduled_for - datetime.timedelta(minutes=15)
   newcall.confirmation_code = generate_confirmation_code()
 
   newcall.save()
