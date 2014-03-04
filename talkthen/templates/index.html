@@ -70,8 +70,9 @@
                 <input type="text" class="form-control input-md" id="phone2" placeholder="Other person's number">
               </div>
               <div class="form-group col-md-4">
-                <input type="text" class="form-control input-md" id="when" placeholder="When is your call?">
-                <span id="when_hint" style="color:orange;display:none;">&rarr; examples: "9am next fri," "4pm 3/15"</span>
+                <input type="text" class="form-control input-md" id="when" placeholder="When is your call?" data-container="body" data-content="examples: '9am next fri,' '4pm 3/15'" data-placement="auto">
+<!--                <span id="when_hint" style="color:orange;display:none;">&rarr; examples: "9am next fri," "4pm 3/15"</span>
+-->
                 <span id="when_error" style="color:red;display:none;">not valid</span>
               </div>
               <button type="button" id="btn_schedule" class="btn btn-default btn-warning btn-lg" style="margin-top:10px" data-toggle="modal" data-target="#confirmationModal">Schedule it</button>
@@ -315,9 +316,11 @@
  $(function() {
 
     $('#when').on('focus', function() {
-      $('#when_hint').show();
+      //$('#when_hint').show();
+      $(this).popover('show');
     }).on('blur', function() {
-      $('#when_hint').hide();
+      //$('#when_hint').hide();
+      $(this).popover('hide');
     }).on('keyup', function() {
       var d = Date.create($('#when').val());
       if(!d.isValid()) {
