@@ -289,7 +289,7 @@
       //$('#when_hint').hide();
       $(this).popover('hide');
     }).on('keyup', function() {
-      var d = Date.create($('#when').val());
+      var d = Date.future($('#when').val());
       if(!d.isValid()) {
         text = 'Invalid date.'
         valid_date = false;
@@ -316,11 +316,24 @@
       var email = $('#email').val().trim();
       var p1 = $('#phone1').val().trim();
       var p2 = $('#phone2').val().trim();
-      var when = Date.create($('#when').val());
+      var when = Date.future($('#when').val());
       if (!when.isValid()) {
         alert('Invalid date');
         return false;
       }
+
+      // Fix year
+      if (when.getYear() === 101) {  // year 2001
+        var now = new Date();
+        if (when.getMonth() < now.getMonth()) {
+          // It's next year
+          when.set({year: 1900 + now.getYear() + 1});
+        } else {
+          // This year
+          when.set({year: 1900 + now.getYear()});
+        }
+      }
+
       if (p1 == '' || p2 == '') {
         alert('You are missing inputs');
         return false;
@@ -330,7 +343,7 @@
       $.post('/core/create_call/', {
         from: p1,
         to: p2,
-        when: +when,
+        when: Math.floor(when.getTime()/1000),
         email: email
       }, function(data) {
         console.log(data);

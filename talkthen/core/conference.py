@@ -54,7 +54,7 @@ def schedule_call(from_num, to_num, when, email):
   newcall = Call()
   newcall.owner_number = from_phone
   newcall.description = 'placeholder desc'
-  newcall.scheduled_for = datetime.datetime.now()
+  newcall.scheduled_for = when
   newcall.remind_at = newcall.scheduled_for - datetime.timedelta(minutes=15)
   newcall.confirmation_code = generate_confirmation_code()
 
