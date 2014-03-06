@@ -40,7 +40,7 @@ def call_placed(request, call_pk):
 
   resp = twilio.twiml.Response()
   call = get_object_or_404(Call, pk=call_pk)
-  resp.say('Hello. You are being connected.')
+  resp.say('Hello. You are being connected by TalkThen.')
   # Only supporting 2-person calls for now
   # TODO Time limit would go here
   # TODO pass action to handle call status
