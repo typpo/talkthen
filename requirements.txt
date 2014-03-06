@@ -16,3 +16,4 @@ gunicorn
 django-celery
 phonenumbers
 newrelic
+django-mailgun

@@ -120,3 +120,7 @@ TWILIO_CALLER_ID = TWILIO_DEFAULT_CALLERID
 # Celery stuff
 import djcelery
 djcelery.setup_loader()
+
+# Mailgun stuff
+from mailgun_auth import MAILGUN_ACCESS_KEY, MAILGUN_SERVER_NAME
+EMAIL_BACKEND = 'django_mailgun.MailgunBackend'

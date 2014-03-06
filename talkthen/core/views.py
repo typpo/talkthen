@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.core.mail import send_mail
 
 import twilio.twiml
 from core.models import Call, PhoneNumber
@@ -19,11 +20,23 @@ def create_call(request):
   to_num = request.POST['to']
   # Convert from UNIX timestamp in milliseconds to timestamp in seconds
   when = datetime.datetime.utcfromtimestamp(int(request.POST['when']))
+  strfwhen = when.strftime('%Y-%m-%d %H:%M:%S')
   email = request.POST.get('email', None)
   print 'scheduling call %s to %s @ %s w/ email %s' % \
-      (from_num, to_num, when.strftime('%Y-%m-%d %H:%M:%S'), email)
+      (from_num, to_num, strfwhen, email)
   if from_num and to_num:
     resp = conference.schedule_call(from_num, to_num, when, email)
+    if resp['success'] and email:
+      # Send confirmation email
+      email_msg = """Hello,
+
+This email confirms a call scheduled for %s <a href="http://www.worldtimebuddy.com/?pl=1&lid=100,5,8&h=8">UTC</a>.  You will be dialed at %s and connected with %s.
+
+Be sure to reply to the text message on your phone with the confirmation code.  Otherwise, the call will not be placed.
+
+- talkThen bot
+      """ % (strfwhen, from_num, to_num)
+      send_mail('Your call has been scheduled', email_msg, 'talkThen@talkthen.com', [email])
     return HttpResponse(json.dumps(resp))
   return HttpResponse("{'success': False, 'message': 'Invalid request'}")
 
