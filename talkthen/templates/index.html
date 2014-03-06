@@ -282,6 +282,8 @@
  $(function() {
     var date_text = '';
     var valid_date = false;
+    analytics.track('home page');
+
     $('#when').on('focus', function() {
       //$('#when_hint').show();
       $(this).popover('show');
@@ -304,8 +306,10 @@
     $('#btn_schedule').on('click', function() {
       if (!valid_date) {
         alert('Please input a valid date and time. For example: "11:30am 3/1"');
+        analytics.track('schedule click rejected');
         return false;
       }
+      analytics.track('schedule click');
       $('#confirmationModalLabel').text('Confirm your call @ ' + date_text);
       setTimeout(function() {
         $('#email').focus();
@@ -318,6 +322,7 @@
       var p2 = $('#phone2').val().trim();
       var when = Date.future($('#when').val());
       if (!when.isValid()) {
+        analytics.track('schedule confirm - invalid date');
         alert('Invalid date');
         return false;
       }
@@ -335,10 +340,12 @@
       }
 
       if (p1 == '' || p2 == '') {
+        analytics.track('schedule confirm - invalid phone');
         alert('You are missing inputs');
         return false;
       }
 
+      analytics.track('schedule confirm');
       $('#confirmationModal').modal('hide')
       $.post('/core/create_call/', {
         from: p1,
