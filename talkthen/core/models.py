@@ -27,7 +27,9 @@ class PhoneNumber(models.Model):
     super(PhoneNumber, self).save(*args, **kwargs) # Call the "real" save() method.
 
   def __str__(self):
-    return '%s (%s)' % (self.number, self.name)
+    if self.name:
+      return '%s (%s)' % (self.number, self.name)
+    return self.number
 
 class Call(models.Model):
   owner_number = models.ForeignKey(PhoneNumber)
@@ -40,6 +42,7 @@ class Call(models.Model):
   called = models.BooleanField(default=False)
   canceled = models.BooleanField(default=False)
   confirmed = models.BooleanField(default=False)
+  reminded = models.BooleanField(default=False)
   confirmation_code = models.CharField(max_length=10)
 
   created = models.DateTimeField(auto_now_add=True)
