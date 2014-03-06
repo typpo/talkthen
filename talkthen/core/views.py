@@ -30,12 +30,15 @@ def create_call(request):
       # Send confirmation email
       email_msg = """Hello,
 
-This email confirms a call scheduled for %s <a href="http://www.worldtimebuddy.com/?pl=1&lid=100,5,8&h=8">UTC</a>.  You will be dialed at %s and connected with %s.
+This email confirms a call scheduled for %s UTC.  You will be dialed at %s and connected with %s.
 
 Be sure to reply to the text message on your phone with the confirmation code.  Otherwise, the call will not be placed.
 
 - talkThen bot
       """ % (strfwhen, from_num, to_num)
+
+      html_email_msg = email_msg.replace('UTC', '<a href="http://www.worldtimebuddy.com/?pl=1&lid=100,5,8&h=8">UTC</a>')
+
       send_mail('Your call has been scheduled', email_msg, 'talkThen@talkthen.com', [email])
     return HttpResponse(json.dumps(resp))
   return HttpResponse("{'success': False, 'message': 'Invalid request'}")
