@@ -12,6 +12,6 @@ class Command(NoArgsCommand):
             if (call.scheduled_for - datetime.datetime.now(pytz.utc)).total_seconds() < 60:
                 print 'Handling %s...' % call
                 conference.start_call(call.owner_number.number, call.pk)
-            elif (call.remind_at - datetime.datetime.now(pytz.utc)).total_seconds() < 60:
+            elif (call.remind_at - datetime.datetime.now(pytz.utc)).total_seconds() < 60 and not call.reminded:
                 print 'Reminding %s...' % call
                 conference.remind_call(call)
