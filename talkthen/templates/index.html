@@ -246,7 +246,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="confirmationModalLabel">Confirm your call</h4>
+        <h4 class="modal-title" id="confirmationModalLabel">Your call is almost ready</h4>
       </div>
       <div class="modal-body" style="font-weight:bold">
         <p>
@@ -255,12 +255,32 @@
         <input type="email" class="form-control input-lg" id="email" placeholder="your@email.com"/>
         <p></p>
         <p>
-        Or, leave blank to receive no email confirmation.
+        Or, leave blank for no email confirmation.
         </p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn" data-dismiss="modal">Cancel</button>
         <button id="btn_confirm_schedule" type="button" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="doneModal" tabindex="-1" role="dialog" aria-labelledby="doneModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="doneModalLabel">Confirm your call</h4>
+      </div>
+      <div class="modal-body" style="font-weight:bold">
+        <img src="http://i.imgur.com/Si9QScS.png" style="float:left; margin-right: 13px; margin-top: -8px; height: 75px; width: auto;" />
+        <p>
+        Your call has been scheduled.  Respond to the confirmation text and you're good to go!
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn_done" type="button" class="btn btn-primary">Done</button>
       </div>
     </div>
   </div>
@@ -357,12 +377,16 @@
         email: email
       }, function(data) {
         console.log(data);
-        alert('Your call has been scheduled.');
+        $('#doneModal').modal('show')
       });
       return false;
     });
 
-  });
+    $('#btn_done').on('click', function() {
+      $('#doneModal').modal('hide')
+    });
+
+  }); // end jquery
 
     </script>
 
