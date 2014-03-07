@@ -313,7 +313,7 @@
     }).on('blur', function() {
       //$('#when_hint').hide();
       $(this).popover('hide');
-    }).on('keyup', function() {
+    }).on('keyup', function(e) {
       var d = Date.future($('#when').val());
       if(!d.isValid()) {
         text = 'Invalid date.'
@@ -324,6 +324,9 @@
       }
       //$('#when_hint').show().html(text);
       date_text = text;
+      if (e.which === 13) {
+        $('#btn_schedule').trigger('click');
+      }
     });
 
     $('#btn_schedule').on('click', function() {
@@ -370,12 +373,14 @@
 
       analytics.track('schedule confirm');
       $('#confirmationModal').modal('hide')
+      $('#loading').show();
       $.post('/core/create_call/', {
         from: p1,
         to: p2,
         when: Math.floor(when.getTime()/1000),
         email: email
       }, function(data) {
+        $('#loading').hide();
         console.log(data);
         $('#doneModal').modal('show')
       });
@@ -395,39 +400,9 @@ window.analytics||(window.analytics=[]),window.analytics.methods=["identify","tr
   window.analytics.load("t4gry20a77");
 window.analytics.page();
 </script>
-<!--
-com:
-talkthen
-talkbelt
-letstalkthen
-calllater
-talkops
-talkowl
-callhead
-callbelt
-talktoyouthen
-thenphone
-thentalk
-lessphone
-tartcall
-lesscall
-callsane
-calltied
-
-io:
-talksoon
-talklater
-easycall
-callmethen/callmemaybe
-callrock
-ttys
-ttfn
-countonit
-noworries
-chatsoon
-chatlater
-nottoworry
-easyplan
--->
+<div id="loading" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; opacity: 0.5; background-color: rgb(170, 170, 170); z-index: 9999; margin: 0px auto; padding-top: 30%; text-align:center; display:none">
+<img src="/assets/img/loading.gif">
+</div>
+</div>
   </body>
 </html>
