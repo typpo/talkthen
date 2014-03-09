@@ -9,7 +9,7 @@ from core.models import Call, PhoneNumber
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         for call in Call.objects.filter(confirmed=True, called=False):
-            if (call.scheduled_for - datetime.datetime.now(pytz.utc)).total_seconds() < 60:
+            if (call.scheduled_for - datetime.datetime.now(pytz.utc)).total_seconds() < 30:
                 print 'Handling %s...' % call
                 conference.start_call(call.owner_number.number, call.pk)
             elif (call.remind_at - datetime.datetime.now(pytz.utc)).total_seconds() < 60 and not call.reminded:
