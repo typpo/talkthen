@@ -315,6 +315,8 @@
       $(this).popover('hide');
     }).on('keyup', function(e) {
       var d = Date.future($('#when').val());
+      // basic working support for "tonight"
+      $('#when').val($('#when').val().replace('tonight', 'today'));
       if(!d.isValid()) {
         text = 'Invalid date.'
         valid_date = false;
@@ -341,6 +343,13 @@
         $('#email').focus();
       }, 500);
     });
+
+    $('#email').on('keyup', function(e) {
+      if (e.which === 13) {
+        $('#btn_confirm_schedule').trigger('click');
+      }
+    });
+
 
     $('#btn_confirm_schedule').on('click', function() {
       var email = $('#email').val().trim();
